@@ -1,0 +1,183 @@
+<?xml version='1.0' encoding='utf-8'?>
+<objectModel 
+ xmlns='http://standards.ieee.org/IEEE1516-2010'
+ xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+ xsi:schemaLocation='http://standards.ieee.org/IEEE1516-2010 http://standards.ieee.org/downloads/1516/1516.2-2010/IEEE1516-DIF-2010.xsd'  >
+	<modelIdentification>
+		<name>FOM</name>
+		<type>FOM</type>
+		<version>1.0</version>
+	</modelIdentification>
+	<objects>
+		<objectClass>
+			<name>HLAobjectRoot</name>
+			<objectClass>
+				<name>Typ_paliwa</name>
+				<sharing>PublishSubscribe</sharing>
+				<semantics>Rodzaj paliwa w pojeździe</semantics>
+				<attribute>
+					<name>pojemnosc</name>
+					<dataType>HLAfloat64Time</dataType>
+					<updateType>Static</updateType>
+					<updateCondition>NA</updateCondition>
+					<ownership>NoTransfer</ownership>
+					<sharing>Publish</sharing>
+					<transportation>HLAreliable</transportation>
+					<order>Receive</order>
+					<semantics>Opisuje czas tankowania samochodu</semantics>
+				</attribute>
+				<attribute>
+					<name>nrsamochodu</name>
+					<dataType>HLAinteger32BE</dataType>
+					<updateType>NA</updateType>
+					<updateCondition>NA</updateCondition>
+					<ownership>Divest</ownership>
+					<sharing>PublishSubscribe</sharing>
+					<transportation>HLAreliable</transportation>
+					<order>Receive</order>
+					<semantics>Opisuje nr samochodu</semantics>
+				</attribute>
+			</objectClass>
+			<objectClass>
+				<name>Kolejka</name>
+				<sharing>PublishSubscribe</sharing>
+				<semantics>Kolejka do odpowiedniego miejsca opisanego za pomocą parametru typ kolejki</semantics>
+				<attribute>
+					<name>typ_kolejki</name>
+					<dataType>HLAinteger64Time</dataType>
+					<updateType>Static</updateType>
+					<updateCondition>NA</updateCondition>
+					<ownership>NoTransfer</ownership>
+					<sharing>PublishSubscribe</sharing>
+					<transportation>HLAreliable</transportation>
+					<order>Receive</order>
+					<semantics>Opisuje typ kolejki
+</semantics>
+				</attribute>
+				<attribute>
+					<name>dlugosc_kolejki</name>
+					<dataType>HLAinteger64Time</dataType>
+					<updateType>Conditional</updateType>
+					<updateCondition>Kiedy obiekt pojazd jest wprowadzany do miejsca opisanego przez atrybut typ kolejki</updateCondition>
+					<ownership>NoTransfer</ownership>
+					<sharing>PublishSubscribe</sharing>
+					<transportation>HLAreliable</transportation>
+					<order>Receive</order>
+					<semantics>Opisuje liczbę samochodów oczekujących w kolejce</semantics>
+				</attribute>
+			</objectClass>
+		</objectClass>
+	</objects>
+	<interactions>
+		<interactionClass>
+			<name>HLAinteractionRoot</name>
+			<interactionClass>
+				<name>Zgłoszenie</name>
+				<sharing>PublishSubscribe</sharing>
+				<transportation>HLAreliable</transportation>
+				<order>Receive</order>
+				<semantics>Zgłoszenie samochodu do odpowieniego miejsca (dystrybutor, myjnia lub kasa)</semantics>
+				<parameter>
+					<name>czas_wykonania</name>
+					<dataType>HLAfloat64Time</dataType>
+					<semantics>Opisuje czas wykonywania się zgłoszenia.</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_zgloszenia</name>
+					<dataType>HLAinteger64Time</dataType>
+					<semantics>Opisuje numer zgłoszenia.</semantics>
+				</parameter>
+				<parameter>
+					<name>typ_zgloszenia</name>
+					<dataType>HLAinteger64Time</dataType>
+					<semantics>Opisuje typ zgłoszenia. Czy zgłoszenie jest do dystrybutora, myjni czy kasy.</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_samochodu</name>
+					<dataType>HLAinteger32BE</dataType>
+					<semantics>NR_samochodu, który wysyła zgłoszenie</semantics>
+				</parameter>
+			</interactionClass>
+			<interactionClass>
+				<name>Czas_oczekiwania</name>
+				<sharing>Publish</sharing>
+				<transportation>HLAreliable</transportation>
+				<order>Receive</order>
+				<semantics>Opisuje średni czas oczekiwania na wykonanie usług.</semantics>
+				<parameter>
+					<name>czas</name>
+					<dataType>HLAfloat64Time</dataType>
+					<semantics>Opisuje średni czas oczekiwania na wykonanie usługi.</semantics>
+				</parameter>
+			</interactionClass>
+			<interactionClass>
+				<name>Rozpoczecie_obslugi</name>
+				<sharing>PublishSubscribe</sharing>
+				<transportation>HLAreliable</transportation>
+				<order>Receive</order>
+				<semantics>Opisuje czas, w którym nastąpiło rozpoczęcie obsługi.</semantics>
+				<parameter>
+					<name>czas_rozpoczecia</name>
+					<dataType>HLAfloat64Time</dataType>
+					<semantics>Opisuje czas, w którym nastąpiło rozpoczęcie obsługi.</semantics>
+				</parameter>
+				<parameter>
+					<name>stanowisko</name>
+					<dataType>HLAinteger64Time</dataType>
+					<semantics>Opisuje na jakim stanowisku zaczęła się obsługa.</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_stanowiska</name>
+					<dataType>HLAinteger16BE</dataType>
+					<semantics>Nr stanowiska
+</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_samochodu</name>
+					<dataType>HLAinteger32BE</dataType>
+					<semantics>N/A</semantics>
+				</parameter>
+			</interactionClass>
+			<interactionClass>
+				<name>Zakonczenie_obslugi</name>
+				<sharing>PublishSubscribe</sharing>
+				<transportation>HLAreliable</transportation>
+				<order>Receive</order>
+				<semantics>Opisuje czas, w którym nastąpiło zakończenie obsługi.</semantics>
+				<parameter>
+					<name>czas_zakonczenia</name>
+					<dataType>HLAfloat64Time</dataType>
+					<semantics>Opisuje czas, w którym nastąpiło zakończenie obsługi.</semantics>
+				</parameter>
+				<parameter>
+					<name>stanowisko</name>
+					<dataType>HLAinteger64Time</dataType>
+					<semantics>Opisuje na jakim stanowisku zakończyła się obsługa.</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_stanowiska</name>
+					<dataType>HLAinteger16BE</dataType>
+					<semantics>Nr stanowiska</semantics>
+				</parameter>
+				<parameter>
+					<name>nr_samochodu</name>
+					<dataType>HLAinteger32BE</dataType>
+					<semantics>N/A</semantics>
+				</parameter>
+			</interactionClass>
+		</interactionClass>
+	</interactions>
+	<dimensions/>
+	<synchronizations/>
+	<transportations/>
+	<updateRates/>
+	<dataTypes>
+		<basicDataRepresentations/>
+		<simpleDataTypes/>
+		<enumeratedDataTypes/>
+		<arrayDataTypes/>
+		<fixedRecordDataTypes/>
+		<variantRecordDataTypes/>
+	</dataTypes>
+	<notes/>
+</objectModel>
